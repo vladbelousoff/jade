@@ -12,7 +12,7 @@ namespace jade {
     }
   }
 
-  auto ArgsProcessor::get_value(StringView arg) const -> StringView
+  auto ArgsProcessor::get_value(std::string_view arg) const -> std::string_view
   {
     if (const auto it = args_map.find(arg); it != args_map.end()) {
       if (it->second + 1 < args.size()) {
@@ -23,7 +23,7 @@ namespace jade {
     return "";
   }
 
-  auto ArgsProcessor::is_set(StringView arg) const -> bool
+  auto ArgsProcessor::is_set(std::string_view arg) const -> bool
   {
     return args_map.contains(arg);
   }

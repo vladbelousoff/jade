@@ -17,14 +17,14 @@ namespace jade {
     }
 
     void process_args(int argc, char* argv[]);
-    auto get_value(StringView arg) const -> StringView;
-    auto is_set(StringView arg) const -> bool;
+    auto get_value(std::string_view arg) const -> std::string_view;
+    auto is_set(std::string_view arg) const -> bool;
 
   private:
     ArgsProcessor() = default;
 
-    std::vector<StringView> args{};
-    std::unordered_map<StringView, int> args_map{};
+    std::vector<std::string_view> args{};
+    std::unordered_map<std::string_view, int> args_map{};
   };
 
 } // namespace jade

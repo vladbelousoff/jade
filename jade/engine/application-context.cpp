@@ -13,7 +13,7 @@
 
 namespace jade {
 
-  int run_app(IApplicationContext* application_context, RenderInterface render_interface, StringView title)
+  int run_app(IApplicationContext* application_context, RenderInterface render_interface, std::string_view title)
   {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
       spdlog::error("Failed to initialize SDL2: {}", SDL_GetError());

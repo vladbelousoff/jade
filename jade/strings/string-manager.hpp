@@ -7,9 +7,6 @@
 
 namespace jade {
 
-  using String = std::string;
-  using StringView = std::string_view;
-
   struct StringManager;
 
   class StringId
@@ -19,9 +16,9 @@ namespace jade {
 
   public:
     explicit StringId();
-    explicit StringId(StringView string);
+    explicit StringId(std::string_view string);
 
-    auto data() const -> StringView;
+    auto data() const -> std::string_view;
 
     auto operator==(const StringId& rhs) const -> bool
     {
@@ -42,13 +39,13 @@ namespace jade {
     friend class StringId;
 
   private:
-    static auto get_string_by_id(StringId id) -> StringView;
-    static auto get_id_by_string(StringView string) -> StringId;
+    static auto get_string_by_id(StringId id) -> std::string_view;
+    static auto get_id_by_string(std::string_view string) -> StringId;
 
     static std::shared_mutex mutex;
     static std::size_t string_counter;
-    static std::unordered_map<StringId, String> id_to_string;
-    static std::unordered_map<StringView, StringId> string_to_id;
+    static std::unordered_map<StringId, std::string> id_to_string;
+    static std::unordered_map<std::string_view, StringId> string_to_id;
   };
 
 } // namespace jade

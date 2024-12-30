@@ -3,12 +3,12 @@
 #include <jade/utils/assert.hpp>
 
 std::shared_mutex jade::StringManager::mutex;
-std::unordered_map<jade::StringId, jade::String> jade::StringManager::id_to_string;
-std::unordered_map<jade::StringView, jade::StringId> jade::StringManager::string_to_id;
+std::unordered_map<jade::StringId, std::string> jade::StringManager::id_to_string;
+std::unordered_map<std::string_view, jade::StringId> jade::StringManager::string_to_id;
 std::size_t jade::StringManager::string_counter = 0;
 
 auto
-jade::StringManager::get_string_by_id(jade::StringId id) -> jade::StringView
+jade::StringManager::get_string_by_id(jade::StringId id) -> std::string_view
 {
   std::shared_lock<std::shared_mutex> lock(mutex);
   auto it = id_to_string.find(id);
@@ -20,7 +20,7 @@ jade::StringManager::get_string_by_id(jade::StringId id) -> jade::StringView
 }
 
 auto
-jade::StringManager::get_id_by_string(jade::StringView string) -> jade::StringId
+jade::StringManager::get_id_by_string(std::string_view string) -> jade::StringId
 {
   {
     std::shared_lock<std::shared_mutex> lock(mutex);
@@ -48,13 +48,13 @@ jade::StringId::StringId()
 {
 }
 
-jade::StringId::StringId(jade::StringView string)
+jade::StringId::StringId(std::string_view string)
   : id(StringManager::get_id_by_string(string).id)
 {
 }
 
 auto
-jade::StringId::data() const -> jade::StringView
+jade::StringId::data() const -> std::string_view
 {
   return StringManager::get_string_by_id(*this);
 }
