@@ -1,7 +1,6 @@
 #include <catch2/catch_all.hpp>
 
 #include <jade/threads/task-queue.hpp>
-#include <jade/utils/string-manager.hpp>
 
 #include <functional>
 #include <vector>
