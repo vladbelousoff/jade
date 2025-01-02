@@ -1,17 +1,17 @@
-#include <catch2/catch_all.hpp>
+#include "helpers/macros.hpp"
 
 #include <jade/threads/task-queue.hpp>
 
 #include <functional>
 #include <vector>
 
-TEST_CASE("Empty Function", "[Function]")
+JADE_TEST_CASE("Empty Function")
 {
   const std::function<void()> f;
   REQUIRE(!f);
 }
 
-TEST_CASE("TaskQueue Works in General", "[TaskQueue]")
+JADE_TEST_CASE("TaskQueue Works in General")
 {
   jade::TaskQueue task_queue;
 
@@ -32,7 +32,7 @@ TEST_CASE("TaskQueue Works in General", "[TaskQueue]")
   }
 }
 
-TEST_CASE("TaskQueue is Thread-Safe", "[TaskQueue][threaded]")
+JADE_TEST_CASE("TaskQueue is Thread-Safe")
 {
   jade::TaskQueue queue;
   std::atomic<int> counter = 0;
