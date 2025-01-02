@@ -13,7 +13,7 @@
 
 namespace jade {
 
-  int run_app(IApplicationContext* application_context, RenderInterface render_interface, std::string_view title)
+  int run_app(IApplicationContext* application_context, const ApplicationContextSettings& settings)
   {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
       spdlog::error("Failed to initialize SDL2: {}", SDL_GetError());
@@ -26,14 +26,14 @@ namespace jade {
     });
 
     int window_flags = SDL_WINDOW_SHOWN;
-    if (render_interface == RenderInterface::OpenGL) {
+    if (settings.render_interface == RenderInterface::OpenGL) {
       window_flags |= SDL_WINDOW_OPENGL;
     }
 
     constexpr int x = SDL_WINDOWPOS_CENTERED;
     constexpr int y = SDL_WINDOWPOS_CENTERED;
 
-    SDL_Window* window = SDL_CreateWindow(title.data(), x, y, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow(settings.title.data(), x, y, settings.width, settings.height, window_flags);
     if (!window) {
       spdlog::error("Failed to create an SDL2 window: {}", SDL_GetError());
       return -1;
@@ -45,7 +45,7 @@ namespace jade {
     });
 
     RenderContext* render_context = nullptr;
-    switch (render_interface) {
+    switch (settings.render_interface) {
       case RenderInterface::OpenGL:
         render_context = new RenderContextOpenGL(window);
         break;
@@ -67,6 +67,9 @@ namespace jade {
     });
 
     application_context->on_init();
+    ScopeExit terminate_context([&] {
+      application_context->on_term();
+    });
 
     bool running = true;
     SDL_Event event;
