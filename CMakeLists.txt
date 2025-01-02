@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.29)
-project(jade-lib)
+project(jade)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(JADE_ENABLE_TESTS "Enable Catch2" ON)
+option(JADE_ENABLE_EXAMPLES "Enable examples" ON)
 option(JADE_ENABLE_LIBASSERT "Enable Libassert" ON)
 
 file(GLOB_RECURSE JADE_SOURCE_FILES "jade/*.cpp")
@@ -83,12 +84,31 @@ if (JADE_ENABLE_TESTS)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
         # Create an executable for the test file
-        add_executable(${PROJECT_NAME}-test_${TEST_NAME} ${TEST_FILE})
+        add_executable(${PROJECT_NAME}-test-${TEST_NAME} ${TEST_FILE})
 
         # Link the executable to the project library and Catch2
-        target_link_libraries(${PROJECT_NAME}-test_${TEST_NAME}
+        target_link_libraries(${PROJECT_NAME}-test-${TEST_NAME}
                 ${PROJECT_NAME}
                 Catch2::Catch2WithMain
+        )
+    endforeach ()
+endif ()
+
+if (JADE_ENABLE_EXAMPLES)
+    # Find all examples source files
+    file(GLOB EXAMPLE_SOURCES "examples/*.cpp")
+
+    # Loop through each example source file and create an executable
+    foreach (EXAMPLE_FILE ${EXAMPLE_SOURCES})
+        # Get the filename without directory or extension
+        get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
+
+        # Create an executable for the example file
+        add_executable(${PROJECT_NAME}-example-${EXAMPLE_NAME} ${EXAMPLE_FILE})
+
+        # Link the executable to the project library
+        target_link_libraries(${PROJECT_NAME}-example-${EXAMPLE_NAME}
+                ${PROJECT_NAME}
         )
     endforeach ()
 endif ()
