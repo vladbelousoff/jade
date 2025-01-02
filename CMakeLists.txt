@@ -75,7 +75,7 @@ if (JADE_ENABLE_TESTS)
     target_include_directories(Catch2 INTERFACE "${Catch2_SOURCE_DIR}/src")
 
     # Find all test source files
-    file(GLOB TEST_SOURCES "test/*.cpp")
+    file(GLOB TEST_SOURCES "tests/*.cpp")
 
     # Loop through each test source file and create an executable
     foreach (TEST_FILE ${TEST_SOURCES})
