@@ -33,7 +33,20 @@ namespace jade {
     constexpr int x = SDL_WINDOWPOS_CENTERED;
     constexpr int y = SDL_WINDOWPOS_CENTERED;
 
-    SDL_Window* window = SDL_CreateWindow(settings.title.data(), x, y, settings.width, settings.height, window_flags);
+    std::string_view render_interface_title;
+    switch (settings.render_interface) {
+      case RenderInterface::OpenGL:
+        render_interface_title = "OpenGL";
+        break;
+      case RenderInterface::Direct3D11:
+        render_interface_title = "Direct3D11";
+        break;
+      default:
+        render_interface_title = "Unknown";
+    }
+
+    const auto title = fmt::format("{} [{}]", settings.title, render_interface_title);
+    SDL_Window* window = SDL_CreateWindow(title.c_str(), x, y, settings.width, settings.height, window_flags);
     if (!window) {
       spdlog::error("Failed to create an SDL2 window: {}", SDL_GetError());
       return -1;
