@@ -79,9 +79,9 @@ namespace jade {
       }
     });
 
-    application_context->on_init();
+    application_context->on_init(render_context);
     ScopeExit terminate_context([&] {
-      application_context->on_term();
+      application_context->on_term(render_context);
     });
 
     bool running = true;

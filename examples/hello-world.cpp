@@ -8,12 +8,12 @@ public:
   ~HelloWorldApplicationContext() override = default;
 
 private:
-  void on_init() override
+  void on_init(jade::RenderContext* context) override
   {
     spdlog::info("Hello World!");
   }
 
-  void on_term() override
+  void on_term(jade::RenderContext* context) override
   {
     spdlog::info("Hello World! Terminated!");
   }

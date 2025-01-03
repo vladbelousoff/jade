@@ -15,7 +15,7 @@ class ShaderD3D11 final : public jade::Shader
   friend class jade::ShaderManagerD3D11;
 
 public:
-  explicit ShaderD3D11(jade::ShaderType type, ID3D10Blob* blob)
+  explicit ShaderD3D11(const jade::ShaderType type, ID3D10Blob* blob)
     : Shader(type)
     , blob(blob)
   {
@@ -33,10 +33,26 @@ private:
   };
 };
 
-auto
-jade::ShaderManagerD3D11::create_shader(ShaderType type, const char* buffer) -> ShaderHandle
+class ShaderProgramD3D11 final : public jade::ShaderProgram
 {
-  const char* shader_target = type == ShaderType::Fragment ? "ps_5_0" : "vs_5.0";
+  friend class jade::ShaderManagerD3D11;
+
+public:
+  ~ShaderProgramD3D11() override = default;
+
+  ShaderProgramD3D11(const std::initializer_list<jade::ShaderHandle> handles)
+  {
+    shader_handles.insert(shader_handles.end(), handles.begin(), handles.end());
+  }
+
+private:
+  std::vector<jade::ShaderHandle> shader_handles;
+};
+
+auto
+jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* buffer) -> ShaderHandle
+{
+  const char* shader_target = type == ShaderType::Fragment ? "ps_5_0" : "vs_5_0";
   auto* shader = new ShaderD3D11(type, nullptr);
 
   {
@@ -52,8 +68,10 @@ jade::ShaderManagerD3D11::create_shader(ShaderType type, const char* buffer) -> 
       &shader->blob, &error_blob);
 
     if (FAILED(hr) && error_blob) {
-      spdlog::error("%s", error_blob->GetBufferPointer());
+      spdlog::error("{}", static_cast<char*>(error_blob->GetBufferPointer()));
       error_blob->Release();
+      JADE_ASSERT(false);
+      return {};
     }
   }
 
@@ -78,13 +96,57 @@ jade::ShaderManagerD3D11::create_shader(ShaderType type, const char* buffer) -> 
       JADE_ASSERT(false);
   }
 
-  return create_handle(shader);
+  return create_shader_handle(shader);
 }
 
 void
-jade::ShaderManagerD3D11::delete_shader(ShaderHandle shader_handle)
+jade::ShaderManagerD3D11::delete_shader(const ShaderHandle shader_handle)
 {
-  delete_handle(shader_handle);
+  delete_shader_handle(shader_handle);
+}
+
+auto
+jade::ShaderManagerD3D11::create_program(const std::initializer_list<ShaderHandle> shader_handles)
+  -> ShaderProgramHandle
+{
+  return create_program_handle(new ShaderProgramD3D11(shader_handles));
+}
+
+void
+jade::ShaderManagerD3D11::delete_program(const ShaderProgramHandle program_handle)
+{
+  delete_program_handle(program_handle);
+}
+
+void
+jade::ShaderManagerD3D11::bind_program(const ShaderProgramHandle program_handle)
+{
+  const auto it_program = programs.find(get_handle_id(program_handle));
+  if (it_program == programs.end()) {
+    return;
+  }
+
+  const auto* shader_program = dynamic_cast<ShaderProgramD3D11*>(it_program->second);
+  for (const auto& shader_handle : shader_program->shader_handles) {
+    const auto it_shader = shaders.find(get_handle_id(shader_handle));
+    if (it_shader == shaders.end()) {
+      continue;
+    }
+
+    const auto* shader = dynamic_cast<ShaderD3D11*>(it_shader->second);
+    switch (shader->type) {
+      case ShaderType::Vertex: {
+        context->VSSetShader(shader->vertex_shader, nullptr, 0);
+        break;
+      }
+      case ShaderType::Fragment: {
+        context->PSSetShader(shader->pixel_shader, nullptr, 0);
+        break;
+      }
+      default:
+        JADE_ASSERT(false);
+    }
+  }
 }
 
 #endif

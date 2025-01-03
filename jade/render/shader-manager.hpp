@@ -23,12 +23,23 @@ namespace jade {
     IdType id = 0;
   };
 
+  class ShaderProgramHandle
+  {
+    friend class ShaderManager;
+
+  public:
+    using IdType = std::size_t;
+
+  private:
+    IdType id = 0;
+  };
+
   class Shader
   {
     friend class ShaderManager;
 
   public:
-    explicit Shader(ShaderType type)
+    explicit Shader(const ShaderType type)
       : type(type)
     {
     }
@@ -39,6 +50,14 @@ namespace jade {
     ShaderType type;
   };
 
+  class ShaderProgram
+  {
+    friend class ShaderManager;
+
+  public:
+    virtual ~ShaderProgram() = default;
+  };
+
   class ShaderManager
   {
   public:
@@ -47,19 +66,38 @@ namespace jade {
     virtual auto create_shader(ShaderType type, const char* buffer) -> ShaderHandle = 0;
     virtual void delete_shader(ShaderHandle shader_handle) = 0;
 
+    virtual auto create_program(std::initializer_list<ShaderHandle> shader_handles) -> ShaderProgramHandle = 0;
+    virtual void delete_program(ShaderProgramHandle program_handle) = 0;
+
+    virtual void bind_program(ShaderProgramHandle program_handle) = 0;
+
     auto is_valid(ShaderHandle shader_handle) const -> bool;
+    auto is_valid(ShaderProgramHandle program_handle) const -> bool;
 
   protected:
-    auto create_handle(Shader* shader) -> ShaderHandle;
-    void delete_handle(ShaderHandle shader_handle);
+    template<typename T>
+    static auto get_handle_id(T handle)
+    {
+      return handle.id;
+    }
 
-  private:
+    auto create_shader_handle(Shader* shader) -> ShaderHandle;
+    void delete_shader_handle(ShaderHandle shader_handle);
+
+    auto create_program_handle(ShaderProgram* shader_program) -> ShaderProgramHandle;
+    void delete_program_handle(ShaderProgramHandle program_handle);
+
     // No smart pointers on purpose, because the pointers
     // are always stored inside the system
     std::unordered_map<ShaderHandle::IdType, Shader*> shaders;
+    std::unordered_map<ShaderProgramHandle::IdType, ShaderProgram*> programs;
 
+  private:
     // Shader counter
-    ShaderHandle::IdType next_index = 1;
+    ShaderHandle::IdType shader_next_index = 1;
+
+    // Program counter
+    ShaderProgramHandle::IdType program_next_index = 1;
   };
 
 } // namespace jade

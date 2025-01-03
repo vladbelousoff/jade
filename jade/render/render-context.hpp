@@ -33,6 +33,9 @@ namespace jade {
     auto create_shader(ShaderType type, const char* buffer) const -> ShaderHandle;
     void delete_shader(ShaderHandle shader_handle) const;
 
+    auto create_program(std::initializer_list<ShaderHandle> shader_handles) const -> ShaderProgramHandle;
+    void delete_program(ShaderProgramHandle program_handle) const;
+
   protected:
     SDL_Window* window = nullptr;
     std::unique_ptr<ShaderManager> shader_manager;

@@ -54,12 +54,13 @@ jade::RenderContextD3D11::RenderContextD3D11(SDL_Window* window)
   JADE_ASSERT(!FAILED(hr));
 
   d3d_device_context->OMSetRenderTargets(1, &render_target_view, nullptr);
-  shader_manager = std::make_unique<ShaderManagerD3D11>(d3d_device);
+
+  shader_manager = std::make_unique<ShaderManagerD3D11>(d3d_device, d3d_device_context);
 }
 
 jade::RenderContextD3D11::~RenderContextD3D11()
 {
-  shader_manager.reset();
+  shader_manager = nullptr;
 
   if (render_target_view) {
     render_target_view->Release();
