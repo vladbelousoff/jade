@@ -36,15 +36,26 @@ namespace jade {
     return { w, h };
   }
 
-  void RenderContextOpenGL::viewport(int x, int y, int w, int h)
+  void RenderContextOpenGL::viewport(const int x, const int y, const int w, const int h)
   {
     glViewport(x, y, w, h);
   }
 
-  void RenderContextOpenGL::clear(float r, float g, float b, float a)
+  void RenderContextOpenGL::clear(const float r, const float g, const float b, const float a)
   {
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+
+  auto RenderContextOpenGL::create_uniform_buffer(std::size_t buffer_size) -> std::shared_ptr<UniformBuffer>
+  {
+    return nullptr;
+  }
+
+  auto RenderContextOpenGL::create_vertex_buffer(unsigned int stride, unsigned int offset)
+    -> std::shared_ptr<VertexBuffer>
+  {
+    return nullptr;
   }
 
   void RenderContextOpenGL::draw_scene(const std::function<void()>& callback)

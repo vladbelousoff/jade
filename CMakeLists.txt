@@ -42,12 +42,23 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_TAG 1.0.1
+        GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(glm)
+
+# target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_FORCE_ROW_MAJOR GLM_FORCE_LEFT_HANDED)
+
 set(
         EXTERNAL_LIBRARIES
         SDL2::SDL2-static
         SDL2::SDL2main
         gl3w
         spdlog
+        glm::glm
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTERNAL_LIBRARIES})
