@@ -10,7 +10,6 @@ jade::UniformBufferD3D11::UniformBufferD3D11(
   , device_context(device_context)
   , constant_buffer(nullptr)
 {
-  this->buffer_size = buffer_size;
   buffer.resize(buffer_size);
 
   D3D11_BUFFER_DESC desc = {};
@@ -38,7 +37,7 @@ jade::UniformBufferD3D11::bind(const ShaderType shader_type)
   const HRESULT hr = device_context->Map(constant_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
   JADE_ASSERT(!FAILED(hr));
 
-  memcpy(mapped_resource.pData, buffer.data(), buffer_size);
+  memcpy(mapped_resource.pData, buffer.data(), buffer.size());
   device_context->Unmap(constant_buffer, 0);
 
   switch (shader_type) {

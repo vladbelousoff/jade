@@ -20,7 +20,6 @@ namespace jade {
     void set_data(std::string_view name, const void* data, std::size_t size);
 
   protected:
-    std::size_t buffer_size = 0;
     std::unordered_map<StringId, std::size_t> offsets;
     std::vector<std::byte> buffer;
   };
