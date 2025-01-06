@@ -5,7 +5,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
-#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
 static auto vertex_shader_source = R"(
@@ -77,7 +77,7 @@ private:
     program_handle = context->create_program({ vsh_handle, fsh_handle });
 
     matrix_buffer = context->create_uniform_buffer<MatrixBuffer>();
-    constexpr auto model_view_projection = glm::mat4(1.0f);
+    const auto model_view_projection = glm::ortho<float>(-0.5f, 0.5f, -0.5f, 0.5f, 0.0f, 1.0f);
     matrix_buffer->set_data("modelViewProjection", &model_view_projection, sizeof(model_view_projection));
 
     vertex_buffer = context->create_vertex_buffer(sizeof(Vertex), 0);

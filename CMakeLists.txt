@@ -50,7 +50,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
-# target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_FORCE_ROW_MAJOR GLM_FORCE_LEFT_HANDED)
+target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_FORCE_LEFT_HANDED GLM_FORCE_DEPTH_ZERO_TO_ONE)
 
 set(
         EXTERNAL_LIBRARIES
