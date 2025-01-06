@@ -75,14 +75,25 @@ jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* buffe
     }
   }
 
+  D3D11_INPUT_ELEMENT_DESC layout[] = { { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA,
+    0 } };
+
   switch (type) {
     case ShaderType::Vertex: {
-      const HRESULT hr = device->CreateVertexShader( //
-        shader->blob->GetBufferPointer(),            //
-        shader->blob->GetBufferSize(),               //
-        nullptr,                                     //
+      HRESULT hr = device->CreateVertexShader( //
+        shader->blob->GetBufferPointer(),      //
+        shader->blob->GetBufferSize(),         //
+        nullptr,                               //
         &shader->vertex_shader);
       JADE_ASSERT(!FAILED(hr));
+
+      ID3D11InputLayout* input_layout = nullptr;
+      hr = device->CreateInputLayout(layout, // Pointer to the layout array
+        _countof(layout),                    // Number of elements in the array
+        shader->blob->GetBufferPointer(), shader->blob->GetBufferSize(), &input_layout);
+      JADE_ASSERT(!FAILED(hr));
+
+      context->IASetInputLayout(input_layout);
     } break;
     case ShaderType::Fragment: {
       const HRESULT hr = device->CreatePixelShader( //

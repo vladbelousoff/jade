@@ -15,18 +15,15 @@ cbuffer MatrixBuffer : register(b0) {
 
 struct VS_INPUT {
     float3 position : POSITION;
-    float4 color : COLOR;
 };
 
 struct PS_INPUT {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
 };
 
 PS_INPUT main(VS_INPUT input) {
     PS_INPUT output;
     output.position = mul(modelViewProjection, float4(input.position, 1.0));
-    output.color = input.color;
     return output;
 }
 )";
@@ -34,25 +31,23 @@ PS_INPUT main(VS_INPUT input) {
 static auto pixel_shader_source = R"(
 struct PS_INPUT {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
 };
 
 float4 main(PS_INPUT input) : SV_TARGET {
-    return float4(1.0, 0.0, 0.0, 1.0);
+    return float4(1.0, 0.0, 0.0, 1.0); // Solid red color
 }
 )";
 
 struct Vertex
 {
   glm::vec3 position;
-  glm::vec4 color;
 };
 
 // Define the triangle vertices
 std::vector<Vertex> vertices = {
-  { { 0.0f, 0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },   // Top
-  { { 0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },  // Right
-  { { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } }, // Left
+  { { 0.0f, 0.5f, 0.0f } },   // Top
+  { { 0.5f, -0.5f, 0.0f } },  // Right
+  { { -0.5f, -0.5f, 0.0f } }, // Left
 };
 
 static unsigned int indices[] = { 0, 1, 2 };
@@ -82,7 +77,7 @@ private:
     program_handle = context->create_program({ vsh_handle, fsh_handle });
 
     matrix_buffer = context->create_uniform_buffer<MatrixBuffer>();
-    const auto model_view_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.f, 1.f);
+    constexpr auto model_view_projection = glm::mat4(1.0f);
     matrix_buffer->set_data("modelViewProjection", &model_view_projection, sizeof(model_view_projection));
 
     vertex_buffer = context->create_vertex_buffer(sizeof(Vertex), 0);
@@ -105,6 +100,7 @@ private:
 
   void on_render(jade::RenderContext* context) override
   {
+    context->clear(0.2f, 0.3f, 0.3f, 1.0f); // Clear to dark gray
     context->bind_program(program_handle);
     matrix_buffer->bind(jade::ShaderType::Vertex);
     vertex_buffer->bind();
