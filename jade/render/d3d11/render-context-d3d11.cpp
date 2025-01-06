@@ -126,7 +126,7 @@ jade::RenderContextD3D11::clear(const float r, const float g, const float b, con
 auto
 jade::RenderContextD3D11::create_uniform_buffer(std::size_t buffer_size) -> std::shared_ptr<UniformBuffer>
 {
-  return std::make_shared<UniformBufferD3D11>(d3d_device, d3d_device_context, buffer_size);
+  return std::make_shared<UniformBufferD3D11>(this, buffer_size);
 }
 
 auto

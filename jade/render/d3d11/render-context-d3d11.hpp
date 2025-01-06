@@ -22,6 +22,16 @@ namespace jade {
     auto create_vertex_buffer(unsigned int stride, unsigned int offset) -> std::shared_ptr<VertexBuffer> override;
     auto create_index_buffer() -> std::shared_ptr<IndexBuffer> override;
 
+    auto get_device() const -> ID3D11Device*
+    {
+      return d3d_device;
+    }
+
+    auto get_device_context() const -> ID3D11DeviceContext*
+    {
+      return d3d_device_context;
+    }
+
   private:
     ID3D11Device* d3d_device = nullptr;
     ID3D11DeviceContext* d3d_device_context = nullptr;

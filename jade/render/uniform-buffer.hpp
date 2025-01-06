@@ -8,13 +8,15 @@
 
 namespace jade {
 
+  class RenderContext;
+
   class UniformBuffer
   {
   public:
     virtual ~UniformBuffer() = default;
 
     // bind the buffer to the pipeline
-    virtual void bind(ShaderType shader_type) = 0;
+    virtual void bind(const RenderContext* render_context, ShaderType shader_type) const = 0;
 
     // add data to the buffer
     void set_data(std::string_view name, const void* data, std::size_t size);
