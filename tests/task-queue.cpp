@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <vector>
+#include <thread>
 
 JADE_TEST_CASE("Empty Function")
 {

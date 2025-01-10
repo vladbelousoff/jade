@@ -1,5 +1,7 @@
 #include "index-buffer-d3d11.hpp"
 
+#ifdef JADE_D3D11_SUPPORT
+
 #include <jade/utils/assert.hpp>
 
 jade::IndexBufferD3D11::IndexBufferD3D11(ID3D11Device* device, ID3D11DeviceContext* device_context)
@@ -47,3 +49,5 @@ jade::IndexBufferD3D11::draw(const unsigned int count) const
   device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   device_context->DrawIndexed(count, 0, 0);
 }
+
+#endif

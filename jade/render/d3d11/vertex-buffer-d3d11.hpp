@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef JADE_D3D11_SUPPORT
+
 #include <d3d11.h>
 #include <jade/render/vertex-buffer.hpp>
 
@@ -25,3 +27,4 @@ namespace jade {
 
 } // namespace jade
 
+#endif

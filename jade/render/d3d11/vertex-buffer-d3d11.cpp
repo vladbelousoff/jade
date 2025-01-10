@@ -1,5 +1,7 @@
 #include "vertex-buffer-d3d11.hpp"
 
+#ifdef JADE_D3D11_SUPPORT
+
 #include <jade/utils/assert.hpp>
 
 jade::VertexBufferD3D11::VertexBufferD3D11(
@@ -43,3 +45,5 @@ jade::VertexBufferD3D11::bind()
 {
   device_context->IASetVertexBuffers(0, 1, &vbo, &stride, &offset);
 }
+
+#endif
