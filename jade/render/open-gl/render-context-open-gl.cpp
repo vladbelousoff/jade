@@ -1,4 +1,5 @@
 #include "render-context-open-gl.hpp"
+#include "shader-manager-open-gl.hpp"
 
 #include <GL/gl3w.h>
 
@@ -22,6 +23,8 @@ namespace jade {
     if (gl3wInit()) {
       return;
     }
+
+    shader_manager = std::make_unique<ShaderManagerOpenGL>();
   }
 
   RenderContextOpenGL::~RenderContextOpenGL()
