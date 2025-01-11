@@ -12,13 +12,13 @@ static auto vertex_shader_source = R"(
 #version 330 core
 
 layout(std140) uniform MatrixBuffer {
-    mat4 modelViewProjection;
+    mat4 model_view_projection;
 };
 
 layout(location = 0) in vec3 position;
 
 void main() {
-    gl_Position = modelViewProjection * vec4(position, 1.0);
+    gl_Position = model_view_projection * vec4(position, 1.0);
 }
 )";
 
@@ -72,7 +72,7 @@ private:
 
     matrix_buffer = context->create_uniform_buffer<MatrixBuffer>();
     const auto model_view_projection = glm::ortho<float>(-0.5f, 0.5f, -0.5f, 0.5f, 0.0f, 1.0f);
-    matrix_buffer->set_data("modelViewProjection", &model_view_projection, sizeof(model_view_projection));
+    matrix_buffer->set_data("model_view_projection", &model_view_projection, sizeof(model_view_projection));
 
     vertex_buffer = context->create_vertex_buffer(sizeof(Vertex), 0);
     vertex_buffer->set_data(vertices.data(), vertices.size() * sizeof(Vertex));
