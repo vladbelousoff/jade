@@ -1,5 +1,8 @@
 #include "render-context-open-gl.hpp"
 #include "shader-manager-open-gl.hpp"
+#include "uniform-buffer-open-gl.hpp"
+#include "vertex-buffer-open-gl.hpp"
+#include "index-buffer-open-gl.hpp"
 
 #include <GL/gl3w.h>
 
@@ -52,13 +55,18 @@ namespace jade {
 
   auto RenderContextOpenGL::create_uniform_buffer(std::size_t buffer_size) -> std::shared_ptr<UniformBuffer>
   {
-    return nullptr;
+    return std::make_shared<UniformBufferOpenGL>(buffer_size);
   }
 
   auto RenderContextOpenGL::create_vertex_buffer(unsigned int stride, unsigned int offset)
     -> std::shared_ptr<VertexBuffer>
   {
-    return nullptr;
+    return std::make_shared<VertexBufferOpenGL>(stride, offset);
+  }
+
+  auto RenderContextOpenGL::create_index_buffer() -> std::shared_ptr<IndexBuffer>
+  {
+    return std::make_shared<IndexBufferOpenGL>();
   }
 
   void RenderContextOpenGL::draw_scene(const std::function<void()>& callback)

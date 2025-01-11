@@ -9,32 +9,26 @@
 #include <spdlog/spdlog.h>
 
 static auto vertex_shader_source = R"(
-cbuffer MatrixBuffer : register(b0) {
-    matrix modelViewProjection;
+#version 330 core
+
+layout(std140) uniform MatrixBuffer {
+    mat4 modelViewProjection;
 };
 
-struct VS_INPUT {
-    float3 position : POSITION;
-};
+layout(location = 0) in vec3 position;
 
-struct PS_INPUT {
-    float4 position : SV_POSITION;
-};
-
-PS_INPUT main(VS_INPUT input) {
-    PS_INPUT output;
-    output.position = mul(modelViewProjection, float4(input.position, 1.0));
-    return output;
+void main() {
+    gl_Position = modelViewProjection * vec4(position, 1.0);
 }
 )";
 
 static auto pixel_shader_source = R"(
-struct PS_INPUT {
-    float4 position : SV_POSITION;
-};
+#version 330 core
 
-float4 main(PS_INPUT input) : SV_TARGET {
-    return float4(1.0, 0.0, 0.0, 1.0); // Solid red color
+out vec4 FragColor;
+
+void main() {
+    FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Solid red color
 }
 )";
 
