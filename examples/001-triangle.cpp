@@ -109,6 +109,7 @@ main()
   jade::ApplicationContextSettings settings;
   settings.width = 640;
   settings.height = 640;
+  settings.render_interface = jade::RenderInterface::OpenGL;
 
   const auto app = std::make_unique<TriangleApplicationContext>();
   return run_app(app.get(), settings);
