@@ -47,13 +47,13 @@ private:
 };
 
 auto
-jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* buffer) -> ShaderHandle
+jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
 {
-  const GLenum shader_type = type == ShaderType::Fragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
+  const GLenum shader_type = type == ShaderType::FRAG ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
   auto* shader = new ShaderOpenGL(type);
 
   shader->shader_id = glCreateShader(shader_type);
-  glShaderSource(shader->shader_id, 1, &buffer, nullptr);
+  glShaderSource(shader->shader_id, 1, &shader_path, nullptr);
   glCompileShader(shader->shader_id);
 
   GLint success = 0;

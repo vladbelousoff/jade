@@ -37,7 +37,7 @@ jade::VertexBufferD3D11::set_data(const void* data, const std::size_t size)
   init_data.pSysMem = data;
 
   const HRESULT hr = device->CreateBuffer(&desc, &init_data, &vbo);
-  JADE_ASSERT(!FAILED(hr));
+  JADE_ASSERT(SUCCEEDED(hr));
 }
 
 void

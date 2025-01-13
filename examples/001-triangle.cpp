@@ -8,30 +8,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
-static auto vertex_shader_source = R"(
-#version 330 core
-
-layout(std140) uniform MatrixBuffer {
-    mat4 model_view_projection;
-};
-
-layout(location = 0) in vec3 position;
-
-void main() {
-    gl_Position = model_view_projection * vec4(position, 1.0);
-}
-)";
-
-static auto pixel_shader_source = R"(
-#version 330 core
-
-out vec4 FragColor;
-
-void main() {
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Solid red color
-}
-)";
-
 struct Vertex
 {
   glm::vec3 position;
@@ -66,8 +42,8 @@ private:
 
   void on_init(jade::RenderContext* context) override
   {
-    vsh_handle = context->create_shader(jade::ShaderType::Vertex, vertex_shader_source);
-    fsh_handle = context->create_shader(jade::ShaderType::Fragment, pixel_shader_source);
+    vsh_handle = context->create_shader(jade::ShaderType::VERT, "examples/001-triangle_shader.vert.hlsl");
+    fsh_handle = context->create_shader(jade::ShaderType::FRAG, "examples/001-triangle_shader.frag.hlsl");
     program_handle = context->create_program({ vsh_handle, fsh_handle });
 
     matrix_buffer = context->create_uniform_buffer<MatrixBuffer>();
@@ -96,7 +72,7 @@ private:
   {
     context->clear(0.2f, 0.3f, 0.3f, 1.0f); // Clear to dark gray
     context->bind_program(program_handle);
-    matrix_buffer->bind(context, jade::ShaderType::Vertex);
+    matrix_buffer->bind(context, jade::ShaderType::VERT);
     vertex_buffer->bind();
     index_buffer->bind();
     index_buffer->draw(std::size(indices));
@@ -109,7 +85,6 @@ main()
   jade::ApplicationContextSettings settings;
   settings.width = 640;
   settings.height = 640;
-  settings.render_interface = jade::RenderInterface::OpenGL;
 
   const auto app = std::make_unique<TriangleApplicationContext>();
   return run_app(app.get(), settings);

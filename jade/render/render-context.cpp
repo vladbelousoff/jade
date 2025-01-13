@@ -5,9 +5,9 @@
 #include <jade/utils/assert.hpp>
 
 auto
-jade::RenderContext::create_shader(ShaderType type, const char* buffer) const -> ShaderHandle
+jade::RenderContext::create_shader(const ShaderType type, const char* shader_path) const -> ShaderHandle
 {
-  return shader_manager->create_shader(type, buffer);
+  return shader_manager->create_shader(type, shader_path);
 }
 
 void

@@ -21,24 +21,22 @@ namespace jade {
     }
   }
 
-  void
-  VertexBufferOpenGL::set_data(const void* data, const std::size_t size)
+  void VertexBufferOpenGL::set_data(const void* data, const std::size_t size)
   {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-    
+    glBufferData(GL_ARRAY_BUFFER, static_cast<int>(size), data, GL_STATIC_DRAW);
+
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(offset));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<int>(stride), reinterpret_cast<void*>(offset));
     glEnableVertexAttribArray(0);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
   }
 
-  void
-  VertexBufferOpenGL::bind()
+  void VertexBufferOpenGL::bind()
   {
     glBindVertexArray(vao);
   }
-} 
+} // namespace jade

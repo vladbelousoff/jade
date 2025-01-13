@@ -47,7 +47,7 @@ namespace jade {
       return create_uniform_buffer(sizeof(T));
     }
 
-    auto create_shader(ShaderType type, const char* buffer) const -> ShaderHandle;
+    auto create_shader(ShaderType type, const char* shader_path) const -> ShaderHandle;
     void delete_shader(ShaderHandle shader_handle) const;
 
     auto create_program(std::initializer_list<ShaderHandle> shader_handles) const -> ShaderProgramHandle;

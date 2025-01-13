@@ -47,16 +47,16 @@ jade::RenderContextD3D11::RenderContextD3D11(SDL_Window* window)
   D3D_FEATURE_LEVEL feature_level;
   HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, create_flags, nullptr, 0,
     D3D11_SDK_VERSION, &swap_chain_desc, &swap_chain, &d3d_device, &feature_level, &d3d_device_context);
-  JADE_ASSERT(!FAILED(hr));
+  JADE_ASSERT(SUCCEEDED(hr));
 
   // Create render target view
   ID3D11Texture2D* back_buffer;
   hr = swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_buffer));
-  JADE_ASSERT(!FAILED(hr));
+  JADE_ASSERT(SUCCEEDED(hr));
 
   hr = d3d_device->CreateRenderTargetView(back_buffer, nullptr, &render_target_view);
   back_buffer->Release();
-  JADE_ASSERT(!FAILED(hr));
+  JADE_ASSERT(SUCCEEDED(hr));
 
   d3d_device_context->OMSetRenderTargets(1, &render_target_view, nullptr);
 
@@ -92,7 +92,7 @@ jade::RenderContextD3D11::draw_scene(const std::function<void()>& callback)
   JADE_ASSERT(swap_chain);
 
   const HRESULT hr = swap_chain->Present(1, 0); // Enable V-Sync
-  JADE_ASSERT(!FAILED(hr));
+  JADE_ASSERT(SUCCEEDED(hr));
 }
 
 auto

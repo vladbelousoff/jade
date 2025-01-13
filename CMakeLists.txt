@@ -76,6 +76,18 @@ if (JADE_ENABLE_LIBASSERT)
     target_compile_definitions(${PROJECT_NAME} PUBLIC JADE_ENABLE_LIBASSERT)
 endif ()
 
+find_library(D3D11_LIBRARY d3d11)
+
+if (D3D11_LIBRARY)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${D3D11_LIBRARY})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC JADE_D3D11_SUPPORT)
+endif ()
+
+find_library(D3D_COMPILER d3dcompiler)
+if (D3D11_LIBRARY)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${D3D_COMPILER})
+endif ()
+
 if (JADE_ENABLE_TESTS)
     FetchContent_Declare(
             Catch2
@@ -106,33 +118,70 @@ if (JADE_ENABLE_TESTS)
 endif ()
 
 if (JADE_ENABLE_EXAMPLES)
-    # Find all examples source files
-    file(GLOB EXAMPLE_SOURCES "examples/*.cpp")
+    # Find all HLSL files in the examples directory
+    file(GLOB_RECURSE HLSL_FILES "examples/*/*.hlsl")
 
-    # Loop through each example source file and create an executable
-    foreach (EXAMPLE_FILE ${EXAMPLE_SOURCES})
-        # Get the filename without directory or extension
-        get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
+    # Set the build directory for SPIR-V files
+    set(SPV_OUTPUT_DIR "${CMAKE_BINARY_DIR}/examples")
 
-        # Create an executable for the example file
-        add_executable(${PROJECT_NAME}-example-${EXAMPLE_NAME} ${EXAMPLE_FILE})
+    # Clear list to store SPIR-V outputs
+    set(SPV_FILES)
 
-        # Link the executable to the project library
-        target_link_libraries(${PROJECT_NAME}-example-${EXAMPLE_NAME}
-                ${PROJECT_NAME}
+    foreach (HLSL_FILE ${HLSL_FILES})
+        # Get the relative path of the HLSL file
+        file(RELATIVE_PATH RELATIVE_PATH_TO_SOURCE "${CMAKE_SOURCE_DIR}/examples" ${HLSL_FILE})
+
+        # Replace directory separators with underscores to ensure unique output names
+        string(REPLACE "/" "_" SAFE_FILE_NAME "${RELATIVE_PATH_TO_SOURCE}")
+        string(REPLACE "\\" "_" SAFE_FILE_NAME "${SAFE_FILE_NAME}")
+
+        # Determine shader stage based on extension
+        if (HLSL_FILE MATCHES "\\.vert\\.hlsl$")
+            set(SHADER_STAGE "vertex")
+        elseif (HLSL_FILE MATCHES "\\.frag\\.hlsl$")
+            set(SHADER_STAGE "fragment")
+        elseif (HLSL_FILE MATCHES "\\.comp\\.hlsl$")
+            set(SHADER_STAGE "compute")
+        elseif (HLSL_FILE MATCHES "\\.geom\\.hlsl$")
+            set(SHADER_STAGE "geometry")
+        elseif (HLSL_FILE MATCHES "\\.tesc\\.hlsl$")
+            set(SHADER_STAGE "tesscontrol")
+        elseif (HLSL_FILE MATCHES "\\.tese\\.hlsl$")
+            set(SHADER_STAGE "tessevaluation")
+        else ()
+            message(FATAL_ERROR "Unknown shader stage for file: ${HLSL_FILE}")
+        endif ()
+
+        # Determine the SPIR-V output file path (unique name)
+        set(SPV_FILE "${SPV_OUTPUT_DIR}/${SAFE_FILE_NAME}.spv")
+
+        # Determine the copied HLSL output file path
+        set(COPIED_HLSL_FILE "${SPV_OUTPUT_DIR}/${SAFE_FILE_NAME}")
+
+        # Add a custom command to compile the HLSL file to SPIR-V and copy the HLSL file
+        add_custom_command(
+                OUTPUT ${SPV_FILE} ${COPIED_HLSL_FILE}
+                COMMAND glslc -fshader-stage=${SHADER_STAGE} ${HLSL_FILE} -o ${SPV_FILE}
+                COMMAND ${CMAKE_COMMAND} -E copy ${HLSL_FILE} ${COPIED_HLSL_FILE}
+                DEPENDS ${HLSL_FILE}
+                COMMENT "Compiling ${HLSL_FILE} to SPIR-V: ${SPV_FILE} and copying to ${COPIED_HLSL_FILE}"
         )
+
+        # Ensure the SPIR-V and HLSL files are part of the build system
+        list(APPEND SPV_FILES ${SPV_FILE})
+        list(APPEND HLSL_OUTPUT_FILES ${COPIED_HLSL_FILE})
     endforeach ()
-endif ()
 
-find_library(D3D11_LIBRARY d3d11)
+    # Add a custom target to compile all SPIR-V and copy HLSL files
+    add_custom_target(compile_shaders ALL DEPENDS ${SPV_FILES} ${HLSL_OUTPUT_FILES})
 
-if (D3D11_LIBRARY)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${D3D11_LIBRARY})
-    target_compile_definitions(${PROJECT_NAME} PUBLIC JADE_D3D11_SUPPORT)
-endif ()
-
-find_library(D3D_COMPILER d3dcompiler)
-if (D3D11_LIBRARY)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${D3D_COMPILER})
+    # Add example executables
+    file(GLOB EXAMPLE_SOURCES "examples/*.cpp")
+    foreach (EXAMPLE_FILE ${EXAMPLE_SOURCES})
+        get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE} NAME_WE)
+        add_executable(${PROJECT_NAME}-example-${EXAMPLE_NAME} ${EXAMPLE_FILE})
+        target_link_libraries(${PROJECT_NAME}-example-${EXAMPLE_NAME} ${PROJECT_NAME})
+        add_dependencies(${PROJECT_NAME}-example-${EXAMPLE_NAME} compile_shaders)
+    endforeach ()
 endif ()
 

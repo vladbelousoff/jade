@@ -6,8 +6,8 @@ namespace jade {
 
   enum class ShaderType
   {
-    Vertex,
-    Fragment,
+    VERT,
+    FRAG,
   };
 
   class ShaderManager;
@@ -63,7 +63,7 @@ namespace jade {
   public:
     virtual ~ShaderManager() = default;
 
-    virtual auto create_shader(ShaderType type, const char* buffer) -> ShaderHandle = 0;
+    virtual auto create_shader(ShaderType type, const char* shader_path) -> ShaderHandle = 0;
     virtual void delete_shader(ShaderHandle shader_handle) = 0;
 
     virtual auto create_program(std::initializer_list<ShaderHandle> shader_handles) -> ShaderProgramHandle = 0;

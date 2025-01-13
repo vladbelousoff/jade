@@ -1,14 +1,14 @@
 #include "shader-manager-d3d11.hpp"
 
-#include "jade/utils/assert.hpp"
-
 #ifdef JADE_D3D11_SUPPORT
 
 #include <d3d11.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
-
+#include <fstream>
 #include <spdlog/spdlog.h>
+
+#include <jade/utils/assert.hpp>
 
 class ShaderD3D11 final : public jade::Shader
 {
@@ -50,14 +50,19 @@ private:
 };
 
 auto
-jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* buffer) -> ShaderHandle
+jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
 {
-  const char* shader_target = type == ShaderType::Fragment ? "ps_5_0" : "vs_5_0";
+  std::ifstream file(shader_path);
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  std::string shader_code = buffer.str();
+
+  const char* shader_target = type == ShaderType::FRAG ? "ps_5_0" : "vs_5_0";
   auto* shader = new ShaderD3D11(type, nullptr);
 
   {
     ID3DBlob* error_blob = nullptr;
-    const HRESULT hr = D3DCompile(buffer, strlen(buffer),
+    const HRESULT hr = D3DCompile(shader_code.c_str(), shader_code.length(),
       nullptr,       // source name
       nullptr,       // defines
       nullptr,       // include handler
@@ -79,29 +84,29 @@ jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* buffe
     0 } };
 
   switch (type) {
-    case ShaderType::Vertex: {
+    case ShaderType::VERT: {
       HRESULT hr = device->CreateVertexShader( //
         shader->blob->GetBufferPointer(),      //
         shader->blob->GetBufferSize(),         //
         nullptr,                               //
         &shader->vertex_shader);
-      JADE_ASSERT(!FAILED(hr));
+      JADE_ASSERT(SUCCEEDED(hr));
 
       ID3D11InputLayout* input_layout = nullptr;
       hr = device->CreateInputLayout(layout, // Pointer to the layout array
         _countof(layout),                    // Number of elements in the array
         shader->blob->GetBufferPointer(), shader->blob->GetBufferSize(), &input_layout);
-      JADE_ASSERT(!FAILED(hr));
+      JADE_ASSERT(SUCCEEDED(hr));
 
       context->IASetInputLayout(input_layout);
     } break;
-    case ShaderType::Fragment: {
+    case ShaderType::FRAG: {
       const HRESULT hr = device->CreatePixelShader( //
         shader->blob->GetBufferPointer(),           //
         shader->blob->GetBufferSize(),              //
         nullptr,                                    //
         &shader->pixel_shader);
-      JADE_ASSERT(!FAILED(hr));
+      JADE_ASSERT(SUCCEEDED(hr));
     } break;
     default:
       JADE_ASSERT(false);
@@ -146,11 +151,11 @@ jade::ShaderManagerD3D11::bind_program(const ShaderProgramHandle program_handle)
 
     const auto* shader = dynamic_cast<ShaderD3D11*>(it_shader->second);
     switch (shader->type) {
-      case ShaderType::Vertex: {
+      case ShaderType::VERT: {
         context->VSSetShader(shader->vertex_shader, nullptr, 0);
         break;
       }
-      case ShaderType::Fragment: {
+      case ShaderType::FRAG: {
         context->PSSetShader(shader->pixel_shader, nullptr, 0);
         break;
       }
