@@ -1,3 +1,4 @@
+#include <jade/args/args-processor.hpp>
 #include <jade/engine/application-context.hpp>
 #include <jade/render/index-buffer.hpp>
 #include <jade/render/uniform-buffer.hpp>
@@ -80,11 +81,17 @@ private:
 };
 
 int
-main()
+main(const int argc, char* argv[])
 {
+  auto& arg_processor = jade::ArgsProcessor::get_instance();
+  arg_processor.process_args(argc, argv);
+
   jade::ApplicationContextSettings settings;
   settings.width = 640;
   settings.height = 640;
+  if (arg_processor.is_set("-opengl")) {
+    settings.render_interface = jade::RenderInterface::OpenGL;
+  }
 
   const auto app = std::make_unique<TriangleApplicationContext>();
   return run_app(app.get(), settings);
