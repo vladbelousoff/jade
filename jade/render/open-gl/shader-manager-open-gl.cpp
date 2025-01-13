@@ -1,7 +1,9 @@
 #include "shader-manager-open-gl.hpp"
 
 #include <GL/gl3w.h>
+#include <fstream>
 #include <spdlog/spdlog.h>
+#include <vector>
 
 class ShaderOpenGL final : public jade::Shader
 {
@@ -49,19 +51,40 @@ private:
 auto
 jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
 {
+  // Load SPIR-V binary from file
+  std::ifstream file(std::string(shader_path) + ".spv", std::ios::binary | std::ios::ate);
+  if (!file.is_open()) {
+    spdlog::error("Failed to open SPIR-V file: {}", shader_path);
+    return {};
+  }
+
+  const std::streamsize size = file.tellg();
+  file.seekg(0, std::ios::beg);
+
+  std::vector<char> buffer(size);
+  if (!file.read(buffer.data(), size)) {
+    spdlog::error("Failed to read SPIR-V file: {}", shader_path);
+    return {};
+  }
+  file.close();
+
+  // Create a new shader object
   const GLenum shader_type = type == ShaderType::FRAG ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
   auto* shader = new ShaderOpenGL(type);
-
   shader->shader_id = glCreateShader(shader_type);
-  glShaderSource(shader->shader_id, 1, &shader_path, nullptr);
-  glCompileShader(shader->shader_id);
 
+  // Load the SPIR-V binary into OpenGL
+  glShaderBinary(
+    1, &shader->shader_id, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), static_cast<GLsizei>(buffer.size()));
+  glSpecializeShader(shader->shader_id, "main", 0, nullptr, nullptr);
+
+  // Check for compilation errors
   GLint success = 0;
   glGetShaderiv(shader->shader_id, GL_COMPILE_STATUS, &success);
   if (!success) {
     GLchar info_log[512];
     glGetShaderInfoLog(shader->shader_id, sizeof(info_log), nullptr, info_log);
-    spdlog::error("Shader compilation failed: {}", info_log);
+    spdlog::error("Shader SPIR-V loading failed: {}", info_log);
     delete shader;
     return {};
   }
@@ -76,7 +99,8 @@ jade::ShaderManagerOpenGL::delete_shader(const ShaderHandle shader_handle)
 }
 
 auto
-jade::ShaderManagerOpenGL::create_program(const std::initializer_list<ShaderHandle> shader_handles) -> ShaderProgramHandle
+jade::ShaderManagerOpenGL::create_program(const std::initializer_list<ShaderHandle> shader_handles)
+  -> ShaderProgramHandle
 {
   auto* program = new ShaderProgramOpenGL();
   program->program_id = glCreateProgram();

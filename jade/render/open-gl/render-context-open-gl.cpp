@@ -1,8 +1,8 @@
 #include "render-context-open-gl.hpp"
+#include "index-buffer-open-gl.hpp"
 #include "shader-manager-open-gl.hpp"
 #include "uniform-buffer-open-gl.hpp"
 #include "vertex-buffer-open-gl.hpp"
-#include "index-buffer-open-gl.hpp"
 
 #include <GL/gl3w.h>
 
@@ -11,8 +11,8 @@ namespace jade {
   RenderContextOpenGL::RenderContextOpenGL(SDL_Window* window)
     : RenderContext(window)
   {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     gl_context = SDL_GL_CreateContext(window);
