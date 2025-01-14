@@ -1,8 +1,11 @@
 #include "render-context-open-gl.hpp"
+
 #include "index-buffer-open-gl.hpp"
 #include "shader-manager-open-gl.hpp"
 #include "uniform-buffer-open-gl.hpp"
 #include "vertex-buffer-open-gl.hpp"
+
+#include <jade/utils/assert.hpp>
 
 #include <GL/gl3w.h>
 
@@ -15,24 +18,21 @@ namespace jade {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    gl_context = SDL_GL_CreateContext(window);
-    if (!gl_context) {
-      return;
-    }
+    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+    JADE_ASSERT(gl_context);
 
     // Enable VSYNC
     SDL_GL_SetSwapInterval(1);
 
-    if (gl3wInit()) {
-      return;
-    }
+    const int res = gl3wInit();
+    JADE_ASSERT(res);
 
     shader_manager = std::make_unique<ShaderManagerOpenGL>();
   }
 
   RenderContextOpenGL::~RenderContextOpenGL()
   {
-    SDL_GL_DeleteContext(gl_context);
+    SDL_GL_DeleteContext(SDL_GL_GetCurrentContext());
   }
 
   auto RenderContextOpenGL::get_drawable_size() -> std::pair<int, int>
