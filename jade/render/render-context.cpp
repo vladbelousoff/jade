@@ -1,5 +1,3 @@
-#pragma once
-
 #include "render-context.hpp"
 
 #include <jade/utils/assert.hpp>

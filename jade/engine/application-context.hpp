@@ -11,7 +11,7 @@ namespace jade {
 #ifdef JADE_D3D11_SUPPORT
       RenderInterface::D3D11;
 #else
-      RenderInterface::OpenGL;
+      RenderInterface::OPEN_GL;
 #endif
     std::string_view title = "Jade";
     int width = 1280;
