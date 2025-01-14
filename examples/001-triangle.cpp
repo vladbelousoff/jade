@@ -90,7 +90,7 @@ main(const int argc, char* argv[])
   settings.width = 640;
   settings.height = 640;
   if (arg_processor.is_set("-opengl")) {
-    settings.render_interface = jade::RenderInterface::OpenGL;
+    settings.render_interface = jade::RenderInterface::OPEN_GL;
   }
 
   const auto app = std::make_unique<TriangleApplicationContext>();

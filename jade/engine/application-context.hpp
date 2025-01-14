@@ -9,7 +9,7 @@ namespace jade {
   {
     RenderInterface render_interface =
 #ifdef JADE_D3D11_SUPPORT
-      RenderInterface::Direct3D11;
+      RenderInterface::D3D11;
 #else
       RenderInterface::OpenGL;
 #endif

@@ -26,7 +26,7 @@ namespace jade {
     });
 
     int window_flags = SDL_WINDOW_SHOWN;
-    if (settings.render_interface == RenderInterface::OpenGL) {
+    if (settings.render_interface == RenderInterface::OPEN_GL) {
       window_flags |= SDL_WINDOW_OPENGL;
     }
 
@@ -35,10 +35,10 @@ namespace jade {
 
     std::string_view render_interface_title;
     switch (settings.render_interface) {
-      case RenderInterface::OpenGL:
+      case RenderInterface::OPEN_GL:
         render_interface_title = "OpenGL";
         break;
-      case RenderInterface::Direct3D11:
+      case RenderInterface::D3D11:
         render_interface_title = "Direct3D11";
         break;
       default:
@@ -59,11 +59,11 @@ namespace jade {
 
     RenderContext* render_context = nullptr;
     switch (settings.render_interface) {
-      case RenderInterface::OpenGL:
+      case RenderInterface::OPEN_GL:
         render_context = new RenderContextOpenGL(window);
         break;
 #ifdef JADE_D3D11_SUPPORT
-      case RenderInterface::Direct3D11:
+      case RenderInterface::D3D11:
         render_context = new RenderContextD3D11(window);
         break;
 #endif
