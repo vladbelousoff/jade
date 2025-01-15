@@ -11,16 +11,16 @@ namespace jade {
 
   class UniformBufferD3D11 final : public UniformBuffer
   {
-  public:
+   public:
     explicit UniformBufferD3D11(const RenderContextD3D11* render_context, std::size_t buffer_size);
     ~UniformBufferD3D11() override;
 
     void bind(const RenderContext* render_context, ShaderType shader_type) const override;
 
-  private:
+   private:
     ID3D11Buffer* constant_buffer = nullptr;
   };
 
-} // namespace jade
+}  // namespace jade
 
 #endif

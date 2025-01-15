@@ -6,7 +6,7 @@ namespace jade {
 
   class ShaderManagerOpenGL final : public ShaderManager
   {
-  public:
+   public:
     explicit ShaderManagerOpenGL() = default;
     ~ShaderManagerOpenGL() override = default;
 
@@ -17,4 +17,4 @@ namespace jade {
     void bind_program(ShaderProgramHandle program_handle) override;
   };
 
-} // namespace jade
+}  // namespace jade

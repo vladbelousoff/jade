@@ -12,7 +12,7 @@
 namespace jade {
 
   RenderContextOpenGL::RenderContextOpenGL(SDL_Window* window)
-    : RenderContext(window)
+      : RenderContext(window)
   {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
@@ -75,4 +75,4 @@ namespace jade {
     SDL_GL_SwapWindow(window);
   }
 
-} // namespace jade
+}  // namespace jade

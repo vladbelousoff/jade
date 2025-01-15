@@ -6,7 +6,7 @@ namespace jade {
 
   class RenderContextOpenGL final : public RenderContext
   {
-  public:
+   public:
     explicit RenderContextOpenGL(SDL_Window* window);
     ~RenderContextOpenGL() override;
 
@@ -19,4 +19,4 @@ namespace jade {
     auto create_index_buffer() -> std::shared_ptr<IndexBuffer> override;
   };
 
-} // namespace jade
+}  // namespace jade

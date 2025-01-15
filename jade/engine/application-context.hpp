@@ -22,10 +22,10 @@ namespace jade {
   {
     friend int run_app(IApplicationContext*, const ApplicationContextSettings&);
 
-  public:
+   public:
     virtual ~IApplicationContext() = default;
 
-  private:
+   private:
     virtual void on_init(RenderContext* context) = 0;
     virtual void on_term(RenderContext* context) = 0;
     virtual void on_update(float dt) = 0;
@@ -34,4 +34,4 @@ namespace jade {
 
   int run_app(IApplicationContext* application_context, const ApplicationContextSettings& settings = {});
 
-} // namespace jade
+}  // namespace jade

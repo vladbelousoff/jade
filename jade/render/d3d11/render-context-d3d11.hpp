@@ -10,7 +10,7 @@ namespace jade {
 
   class RenderContextD3D11 final : public RenderContext
   {
-  public:
+   public:
     explicit RenderContextD3D11(SDL_Window* window);
     ~RenderContextD3D11() override;
 
@@ -32,13 +32,13 @@ namespace jade {
       return d3d_device_context;
     }
 
-  private:
+   private:
     ID3D11Device* d3d_device = nullptr;
     ID3D11DeviceContext* d3d_device_context = nullptr;
     IDXGISwapChain* swap_chain = nullptr;
     ID3D11RenderTargetView* render_target_view = nullptr;
   };
 
-} // namespace jade
+}  // namespace jade
 
 #endif

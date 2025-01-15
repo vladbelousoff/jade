@@ -120,4 +120,4 @@ namespace jade {
     return 0;
   }
 
-} // namespace jade
+}  // namespace jade

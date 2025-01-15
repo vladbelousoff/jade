@@ -5,8 +5,8 @@
 #include <d3d11.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
-#include <fstream>
 #include <spdlog/spdlog.h>
+#include <fstream>
 
 #include <jade/utils/assert.hpp>
 
@@ -14,16 +14,16 @@ class ShaderD3D11 final : public jade::Shader
 {
   friend class jade::ShaderManagerD3D11;
 
-public:
+ public:
   explicit ShaderD3D11(const jade::ShaderType type, ID3D10Blob* blob)
-    : Shader(type)
-    , blob(blob)
+      : Shader(type)
+      , blob(blob)
   {
   }
 
   ~ShaderD3D11() override = default;
 
-private:
+ private:
   ID3DBlob* blob = nullptr;
 
   union
@@ -37,7 +37,7 @@ class ShaderProgramD3D11 final : public jade::ShaderProgram
 {
   friend class jade::ShaderManagerD3D11;
 
-public:
+ public:
   ~ShaderProgramD3D11() override = default;
 
   ShaderProgramD3D11(const std::initializer_list<jade::ShaderHandle> handles)
@@ -45,12 +45,11 @@ public:
     shader_handles.insert(shader_handles.end(), handles.begin(), handles.end());
   }
 
-private:
+ private:
   std::vector<jade::ShaderHandle> shader_handles;
 };
 
-auto
-jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
+auto jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
 {
   std::ifstream file(shader_path);
   std::stringstream buffer;
@@ -63,13 +62,13 @@ jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shade
   {
     ID3DBlob* error_blob = nullptr;
     const HRESULT hr = D3DCompile(shader_code.c_str(), shader_code.length(),
-      nullptr,       // source name
-      nullptr,       // defines
-      nullptr,       // include handler
-      "main",        // entry point
-      shader_target, // shader target
+      nullptr,        // source name
+      nullptr,        // defines
+      nullptr,        // include handler
+      "main",         // entry point
+      shader_target,  // shader target
       D3DCOMPILE_ENABLE_STRICTNESS,
-      0, // effect flags
+      0,  // effect flags
       &shader->blob, &error_blob);
 
     if (FAILED(hr) && error_blob) {
@@ -85,26 +84,26 @@ jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shade
 
   switch (type) {
     case ShaderType::VERT: {
-      HRESULT hr = device->CreateVertexShader( //
-        shader->blob->GetBufferPointer(),      //
-        shader->blob->GetBufferSize(),         //
-        nullptr,                               //
+      HRESULT hr = device->CreateVertexShader(  //
+        shader->blob->GetBufferPointer(),       //
+        shader->blob->GetBufferSize(),          //
+        nullptr,                                //
         &shader->vertex_shader);
       JADE_ASSERT(SUCCEEDED(hr));
 
       ID3D11InputLayout* input_layout = nullptr;
-      hr = device->CreateInputLayout(layout, // Pointer to the layout array
-        _countof(layout),                    // Number of elements in the array
+      hr = device->CreateInputLayout(layout,  // Pointer to the layout array
+        _countof(layout),                     // Number of elements in the array
         shader->blob->GetBufferPointer(), shader->blob->GetBufferSize(), &input_layout);
       JADE_ASSERT(SUCCEEDED(hr));
 
       context->IASetInputLayout(input_layout);
     } break;
     case ShaderType::FRAG: {
-      const HRESULT hr = device->CreatePixelShader( //
-        shader->blob->GetBufferPointer(),           //
-        shader->blob->GetBufferSize(),              //
-        nullptr,                                    //
+      const HRESULT hr = device->CreatePixelShader(  //
+        shader->blob->GetBufferPointer(),            //
+        shader->blob->GetBufferSize(),               //
+        nullptr,                                     //
         &shader->pixel_shader);
       JADE_ASSERT(SUCCEEDED(hr));
     } break;
@@ -115,27 +114,23 @@ jade::ShaderManagerD3D11::create_shader(const ShaderType type, const char* shade
   return create_shader_handle(shader);
 }
 
-void
-jade::ShaderManagerD3D11::delete_shader(const ShaderHandle shader_handle)
+void jade::ShaderManagerD3D11::delete_shader(const ShaderHandle shader_handle)
 {
   delete_shader_handle(shader_handle);
 }
 
-auto
-jade::ShaderManagerD3D11::create_program(const std::initializer_list<ShaderHandle> shader_handles)
+auto jade::ShaderManagerD3D11::create_program(const std::initializer_list<ShaderHandle> shader_handles)
   -> ShaderProgramHandle
 {
   return create_program_handle(new ShaderProgramD3D11(shader_handles));
 }
 
-void
-jade::ShaderManagerD3D11::delete_program(const ShaderProgramHandle program_handle)
+void jade::ShaderManagerD3D11::delete_program(const ShaderProgramHandle program_handle)
 {
   delete_program_handle(program_handle);
 }
 
-void
-jade::ShaderManagerD3D11::bind_program(const ShaderProgramHandle program_handle)
+void jade::ShaderManagerD3D11::bind_program(const ShaderProgramHandle program_handle)
 {
   const auto it_program = programs.find(get_handle_id(program_handle));
   if (it_program == programs.end()) {

@@ -20,11 +20,10 @@ namespace jade {
     }
   }
 
-  void
-  UniformBufferOpenGL::bind(const RenderContext* render_context, const ShaderType shader_type) const
+  void UniformBufferOpenGL::bind(const RenderContext* render_context, const ShaderType shader_type) const
   {
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, buffer.size(), buffer.data());
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
   }
-} 
+}  // namespace jade

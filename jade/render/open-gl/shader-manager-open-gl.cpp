@@ -1,18 +1,18 @@
 #include "shader-manager-open-gl.hpp"
 
 #include <GL/gl3w.h>
-#include <fstream>
 #include <spdlog/spdlog.h>
+#include <fstream>
 #include <vector>
 
 class ShaderOpenGL final : public jade::Shader
 {
   friend class jade::ShaderManagerOpenGL;
 
-public:
+ public:
   explicit ShaderOpenGL(const jade::ShaderType type)
-    : Shader(type)
-    , shader_id(0)
+      : Shader(type)
+      , shader_id(0)
   {
   }
 
@@ -23,7 +23,7 @@ public:
     }
   }
 
-private:
+ private:
   GLuint shader_id;
 };
 
@@ -31,9 +31,9 @@ class ShaderProgramOpenGL final : public jade::ShaderProgram
 {
   friend class jade::ShaderManagerOpenGL;
 
-public:
+ public:
   explicit ShaderProgramOpenGL()
-    : program_id(0)
+      : program_id(0)
   {
   }
 
@@ -44,12 +44,11 @@ public:
     }
   }
 
-private:
+ private:
   GLuint program_id;
 };
 
-auto
-jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
+auto jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* shader_path) -> ShaderHandle
 {
   // Load SPIR-V binary from file
   std::ifstream file(std::string(shader_path) + ".spv", std::ios::binary | std::ios::ate);
@@ -92,14 +91,12 @@ jade::ShaderManagerOpenGL::create_shader(const ShaderType type, const char* shad
   return create_shader_handle(shader);
 }
 
-void
-jade::ShaderManagerOpenGL::delete_shader(const ShaderHandle shader_handle)
+void jade::ShaderManagerOpenGL::delete_shader(const ShaderHandle shader_handle)
 {
   delete_shader_handle(shader_handle);
 }
 
-auto
-jade::ShaderManagerOpenGL::create_program(const std::initializer_list<ShaderHandle> shader_handles)
+auto jade::ShaderManagerOpenGL::create_program(const std::initializer_list<ShaderHandle> shader_handles)
   -> ShaderProgramHandle
 {
   auto* program = new ShaderProgramOpenGL();
@@ -130,14 +127,12 @@ jade::ShaderManagerOpenGL::create_program(const std::initializer_list<ShaderHand
   return create_program_handle(program);
 }
 
-void
-jade::ShaderManagerOpenGL::delete_program(const ShaderProgramHandle program_handle)
+void jade::ShaderManagerOpenGL::delete_program(const ShaderProgramHandle program_handle)
 {
   delete_program_handle(program_handle);
 }
 
-void
-jade::ShaderManagerOpenGL::bind_program(const ShaderProgramHandle program_handle)
+void jade::ShaderManagerOpenGL::bind_program(const ShaderProgramHandle program_handle)
 {
   const auto it = programs.find(get_handle_id(program_handle));
   if (it == programs.end()) {

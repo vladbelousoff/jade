@@ -28,8 +28,7 @@ jade::UniformBufferD3D11::~UniformBufferD3D11()
   }
 }
 
-void
-jade::UniformBufferD3D11::bind(const RenderContext* render_context, const ShaderType shader_type) const
+void jade::UniformBufferD3D11::bind(const RenderContext* render_context, const ShaderType shader_type) const
 {
   D3D11_MAPPED_SUBRESOURCE mapped_resource;
 

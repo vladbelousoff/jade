@@ -2,8 +2,7 @@
 
 #include <ranges>
 
-void
-jade::UniformBuffer::set_data(const std::string_view name, const void* data, const std::size_t size)
+void jade::UniformBuffer::set_data(const std::string_view name, const void* data, const std::size_t size)
 {
   const auto name_id = StringId(name);
 

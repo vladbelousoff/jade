@@ -6,11 +6,11 @@
 
 jade::VertexBufferD3D11::VertexBufferD3D11(
   ID3D11Device* device, ID3D11DeviceContext* device_context, const unsigned int stride, const unsigned int offset)
-  : device(device)
-  , device_context(device_context)
-  , vbo(nullptr)
-  , offset(offset)
-  , stride(stride)
+    : device(device)
+    , device_context(device_context)
+    , vbo(nullptr)
+    , offset(offset)
+    , stride(stride)
 {
 }
 
@@ -21,8 +21,7 @@ jade::VertexBufferD3D11::~VertexBufferD3D11()
   }
 }
 
-void
-jade::VertexBufferD3D11::set_data(const void* data, const std::size_t size)
+void jade::VertexBufferD3D11::set_data(const void* data, const std::size_t size)
 {
   if (vbo) {
     vbo->Release();
@@ -40,8 +39,7 @@ jade::VertexBufferD3D11::set_data(const void* data, const std::size_t size)
   JADE_ASSERT(SUCCEEDED(hr));
 }
 
-void
-jade::VertexBufferD3D11::bind()
+void jade::VertexBufferD3D11::bind()
 {
   device_context->IASetVertexBuffers(0, 1, &vbo, &stride, &offset);
 }

@@ -28,4 +28,4 @@ namespace jade {
     return args_map.contains(arg);
   }
 
-} // namespace jade
+}  // namespace jade

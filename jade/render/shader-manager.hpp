@@ -16,10 +16,10 @@ namespace jade {
   {
     friend class ShaderManager;
 
-  public:
+   public:
     using IdType = std::size_t;
 
-  private:
+   private:
     IdType id = 0;
   };
 
@@ -27,10 +27,10 @@ namespace jade {
   {
     friend class ShaderManager;
 
-  public:
+   public:
     using IdType = std::size_t;
 
-  private:
+   private:
     IdType id = 0;
   };
 
@@ -38,15 +38,15 @@ namespace jade {
   {
     friend class ShaderManager;
 
-  public:
+   public:
     explicit Shader(const ShaderType type)
-      : type(type)
+        : type(type)
     {
     }
 
     virtual ~Shader() = default;
 
-  protected:
+   protected:
     ShaderType type;
   };
 
@@ -54,13 +54,13 @@ namespace jade {
   {
     friend class ShaderManager;
 
-  public:
+   public:
     virtual ~ShaderProgram() = default;
   };
 
   class ShaderManager
   {
-  public:
+   public:
     virtual ~ShaderManager() = default;
 
     virtual auto create_shader(ShaderType type, const char* shader_path) -> ShaderHandle = 0;
@@ -74,8 +74,8 @@ namespace jade {
     auto is_valid(ShaderHandle shader_handle) const -> bool;
     auto is_valid(ShaderProgramHandle program_handle) const -> bool;
 
-  protected:
-    template<typename T>
+   protected:
+    template <typename T>
     static auto get_handle_id(T handle)
     {
       return handle.id;
@@ -92,7 +92,7 @@ namespace jade {
     std::unordered_map<ShaderHandle::IdType, Shader*> shaders;
     std::unordered_map<ShaderProgramHandle::IdType, ShaderProgram*> programs;
 
-  private:
+   private:
     // Shader counter
     ShaderHandle::IdType shader_next_index = 1;
 
@@ -100,4 +100,4 @@ namespace jade {
     ShaderProgramHandle::IdType program_next_index = 1;
   };
 
-} // namespace jade
+}  // namespace jade

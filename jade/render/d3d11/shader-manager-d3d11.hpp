@@ -11,10 +11,10 @@ namespace jade {
 
   class ShaderManagerD3D11 final : public ShaderManager
   {
-  public:
+   public:
     explicit ShaderManagerD3D11(ID3D11Device* device, ID3D11DeviceContext* context)
-      : device(device)
-      , context(context)
+        : device(device)
+        , context(context)
     {
     }
 
@@ -26,11 +26,11 @@ namespace jade {
     void delete_program(ShaderProgramHandle program_handle) override;
     void bind_program(ShaderProgramHandle program_handle) override;
 
-  private:
+   private:
     ID3D11Device* device;
     ID3D11DeviceContext* context;
   };
 
-} // namespace jade
+}  // namespace jade
 
 #endif

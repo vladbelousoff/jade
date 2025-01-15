@@ -10,7 +10,7 @@ namespace jade {
   {
     using Task = std::function<void()>;
 
-  public:
+   public:
     ~TaskQueue()
     {
       interrupt();
@@ -21,7 +21,7 @@ namespace jade {
     void perform_tasks_until_interrupted();
     void interrupt();
 
-  private:
+   private:
     auto pop_next_task() -> Task;
 
     std::mutex mutex = {};
@@ -30,4 +30,4 @@ namespace jade {
     bool interrupted = false;
   };
 
-} // namespace jade
+}  // namespace jade

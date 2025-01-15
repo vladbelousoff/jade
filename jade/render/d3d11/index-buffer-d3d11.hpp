@@ -11,7 +11,7 @@ namespace jade {
 
   class IndexBufferD3D11 final : public IndexBuffer
   {
-  public:
+   public:
     IndexBufferD3D11(ID3D11Device* device, ID3D11DeviceContext* device_context);
     ~IndexBufferD3D11() override;
 
@@ -19,12 +19,12 @@ namespace jade {
     void bind() const override;
     void draw(unsigned int count) const override;
 
-  private:
+   private:
     ID3D11Device* device;
     ID3D11DeviceContext* device_context;
     ID3D11Buffer* ibo;
   };
 
-} // namespace jade
+}  // namespace jade
 
 #endif

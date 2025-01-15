@@ -9,7 +9,7 @@ namespace jade {
 
   class VertexBufferD3D11 final : public VertexBuffer
   {
-  public:
+   public:
     VertexBufferD3D11(
       ID3D11Device* device, ID3D11DeviceContext* device_context, unsigned int stride, unsigned int offset);
     ~VertexBufferD3D11() override;
@@ -17,7 +17,7 @@ namespace jade {
     void set_data(const void* data, std::size_t size) override;
     void bind() override;
 
-  private:
+   private:
     ID3D11Device* device;
     ID3D11DeviceContext* device_context;
     ID3D11Buffer* vbo;
@@ -25,6 +25,6 @@ namespace jade {
     UINT stride;
   };
 
-} // namespace jade
+}  // namespace jade
 
 #endif

@@ -13,7 +13,7 @@ namespace jade {
 
   class UniformBuffer
   {
-  public:
+   public:
     virtual ~UniformBuffer() = default;
 
     // bind the buffer to the pipeline
@@ -22,9 +22,9 @@ namespace jade {
     // add data to the buffer
     void set_data(std::string_view name, const void* data, std::size_t size);
 
-  protected:
+   protected:
     std::unordered_map<StringId, std::size_t> offsets;
     std::vector<std::byte> buffer;
   };
 
-} // namespace jade
+}  // namespace jade

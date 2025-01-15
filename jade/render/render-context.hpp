@@ -21,9 +21,9 @@ namespace jade {
 
   class RenderContext
   {
-  public:
+   public:
     explicit RenderContext(SDL_Window* window)
-      : window(window)
+        : window(window)
     {
     }
 
@@ -41,7 +41,7 @@ namespace jade {
       return nullptr;
     }
 
-    template<typename T>
+    template <typename T>
     auto create_uniform_buffer() -> std::shared_ptr<UniformBuffer>
     {
       return create_uniform_buffer(sizeof(T));
@@ -55,9 +55,9 @@ namespace jade {
 
     void bind_program(ShaderProgramHandle program_handle) const;
 
-  protected:
+   protected:
     SDL_Window* window = nullptr;
     std::unique_ptr<ShaderManager> shader_manager;
   };
 
-} // namespace jade
+}  // namespace jade

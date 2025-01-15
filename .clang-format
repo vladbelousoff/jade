@@ -1,7 +1,7 @@
 # Created by https://github.com/vladbelousoff
 ---
 Language: Cpp
-BasedOnStyle: Mozilla
+BasedOnStyle: Google
 AlignAfterOpenBracket: false
 AlignConsecutiveMacros:
   Enabled: true

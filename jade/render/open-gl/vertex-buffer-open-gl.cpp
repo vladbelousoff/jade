@@ -4,8 +4,8 @@
 namespace jade {
 
   VertexBufferOpenGL::VertexBufferOpenGL(const unsigned int stride, const unsigned int offset)
-    : stride(stride)
-    , offset(offset)
+      : stride(stride)
+      , offset(offset)
   {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -39,4 +39,4 @@ namespace jade {
   {
     glBindVertexArray(vao);
   }
-} // namespace jade
+}  // namespace jade

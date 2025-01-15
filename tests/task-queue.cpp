@@ -3,8 +3,8 @@
 #include <jade/threads/task-queue.hpp>
 
 #include <functional>
-#include <vector>
 #include <thread>
+#include <vector>
 
 JADE_TEST_CASE("Empty Function")
 {

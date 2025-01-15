@@ -14,7 +14,7 @@ namespace jade {
     friend struct std::hash<StringId>;
     friend struct StringManager;
 
-  public:
+   public:
     explicit StringId();
     explicit StringId(std::string_view string);
 
@@ -30,7 +30,7 @@ namespace jade {
       return id != rhs.id;
     }
 
-  private:
+   private:
     std::size_t id;
   };
 
@@ -38,7 +38,7 @@ namespace jade {
   {
     friend class StringId;
 
-  private:
+   private:
     static auto get_string_by_id(StringId id) -> std::string_view;
     static auto get_id_by_string(std::string_view string) -> StringId;
 
@@ -48,9 +48,9 @@ namespace jade {
     static std::unordered_map<std::string_view, StringId> string_to_id;
   };
 
-} // namespace jade
+}  // namespace jade
 
-template<>
+template <>
 struct std::hash<jade::StringId>
 {
   std::size_t operator()(const jade::StringId& string_id) const noexcept

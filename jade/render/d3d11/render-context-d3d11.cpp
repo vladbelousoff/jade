@@ -16,7 +16,7 @@
 #include <dxgi.h>
 
 jade::RenderContextD3D11::RenderContextD3D11(SDL_Window* window)
-  : RenderContext(window)
+    : RenderContext(window)
 {
   SDL_SysWMinfo wm_info;
   SDL_VERSION(&wm_info.version);
@@ -84,27 +84,24 @@ jade::RenderContextD3D11::~RenderContextD3D11()
   }
 }
 
-void
-jade::RenderContextD3D11::draw_scene(const std::function<void()>& callback)
+void jade::RenderContextD3D11::draw_scene(const std::function<void()>& callback)
 {
   callback();
 
   JADE_ASSERT(swap_chain);
 
-  const HRESULT hr = swap_chain->Present(1, 0); // Enable V-Sync
+  const HRESULT hr = swap_chain->Present(1, 0);  // Enable V-Sync
   JADE_ASSERT(SUCCEEDED(hr));
 }
 
-auto
-jade::RenderContextD3D11::get_drawable_size() -> std::pair<int, int>
+auto jade::RenderContextD3D11::get_drawable_size() -> std::pair<int, int>
 {
   int w, h;
   SDL_GetWindowSize(window, &w, &h);
   return { w, h };
 }
 
-void
-jade::RenderContextD3D11::viewport(const int x, const int y, const int w, const int h)
+void jade::RenderContextD3D11::viewport(const int x, const int y, const int w, const int h)
 {
   D3D11_VIEWPORT vp;
   vp.TopLeftX = static_cast<FLOAT>(x);
@@ -116,28 +113,24 @@ jade::RenderContextD3D11::viewport(const int x, const int y, const int w, const 
   d3d_device_context->RSSetViewports(1, &vp);
 }
 
-void
-jade::RenderContextD3D11::clear(const float r, const float g, const float b, const float a)
+void jade::RenderContextD3D11::clear(const float r, const float g, const float b, const float a)
 {
   const float color[4] = { r, g, b, a };
   d3d_device_context->ClearRenderTargetView(render_target_view, color);
 }
 
-auto
-jade::RenderContextD3D11::create_uniform_buffer(std::size_t buffer_size) -> std::shared_ptr<UniformBuffer>
+auto jade::RenderContextD3D11::create_uniform_buffer(std::size_t buffer_size) -> std::shared_ptr<UniformBuffer>
 {
   return std::make_shared<UniformBufferD3D11>(this, buffer_size);
 }
 
-auto
-jade::RenderContextD3D11::create_vertex_buffer(unsigned int stride, unsigned int offset)
+auto jade::RenderContextD3D11::create_vertex_buffer(unsigned int stride, unsigned int offset)
   -> std::shared_ptr<VertexBuffer>
 {
   return std::make_shared<VertexBufferD3D11>(d3d_device, d3d_device_context, stride, offset);
 }
 
-std::shared_ptr<jade::IndexBuffer>
-jade::RenderContextD3D11::create_index_buffer()
+std::shared_ptr<jade::IndexBuffer> jade::RenderContextD3D11::create_index_buffer()
 {
   return std::make_shared<IndexBufferD3D11>(d3d_device, d3d_device_context);
 }

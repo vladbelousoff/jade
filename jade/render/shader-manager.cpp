@@ -2,20 +2,17 @@
 
 #include <jade/utils/assert.hpp>
 
-auto
-jade::ShaderManager::is_valid(const ShaderHandle shader_handle) const -> bool
+auto jade::ShaderManager::is_valid(const ShaderHandle shader_handle) const -> bool
 {
   return shader_handle.id != 0 && shaders.contains(shader_handle.id);
 }
 
-auto
-jade::ShaderManager::is_valid(const ShaderProgramHandle program_handle) const -> bool
+auto jade::ShaderManager::is_valid(const ShaderProgramHandle program_handle) const -> bool
 {
   return program_handle.id != 0 && programs.contains(program_handle.id);
 }
 
-auto
-jade::ShaderManager::create_shader_handle(Shader* shader) -> ShaderHandle
+auto jade::ShaderManager::create_shader_handle(Shader* shader) -> ShaderHandle
 {
   ShaderHandle::IdType id = shader_next_index++;
   shaders.insert({ id, shader });
@@ -26,8 +23,7 @@ jade::ShaderManager::create_shader_handle(Shader* shader) -> ShaderHandle
   return shader_handle;
 }
 
-void
-jade::ShaderManager::delete_shader_handle(const ShaderHandle shader_handle)
+void jade::ShaderManager::delete_shader_handle(const ShaderHandle shader_handle)
 {
   JADE_ASSERT(is_valid(shader_handle));
   auto it = shaders.find(shader_handle.id);
@@ -37,8 +33,7 @@ jade::ShaderManager::delete_shader_handle(const ShaderHandle shader_handle)
   shaders.erase(it);
 }
 
-auto
-jade::ShaderManager::create_program_handle(ShaderProgram* shader_program) -> ShaderProgramHandle
+auto jade::ShaderManager::create_program_handle(ShaderProgram* shader_program) -> ShaderProgramHandle
 {
   ShaderProgramHandle::IdType id = program_next_index++;
   programs.insert({ id, shader_program });
@@ -49,8 +44,7 @@ jade::ShaderManager::create_program_handle(ShaderProgram* shader_program) -> Sha
   return program_handle;
 }
 
-void
-jade::ShaderManager::delete_program_handle(const ShaderProgramHandle program_handle)
+void jade::ShaderManager::delete_program_handle(const ShaderProgramHandle program_handle)
 {
   JADE_ASSERT(is_valid(program_handle));
   auto it = programs.find(program_handle.id);

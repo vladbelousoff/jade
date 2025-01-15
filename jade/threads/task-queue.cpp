@@ -1,7 +1,6 @@
 #include "task-queue.hpp"
 
-void
-jade::TaskQueue::add_task(jade::TaskQueue::Task&& task)
+void jade::TaskQueue::add_task(jade::TaskQueue::Task&& task)
 {
   std::lock_guard lock(mutex);
   task_queue.emplace(std::forward<Task>(task));
@@ -9,8 +8,7 @@ jade::TaskQueue::add_task(jade::TaskQueue::Task&& task)
   cv.notify_one();
 }
 
-auto
-jade::TaskQueue::pop_next_task() -> jade::TaskQueue::Task
+auto jade::TaskQueue::pop_next_task() -> jade::TaskQueue::Task
 {
   if (task_queue.empty()) {
     return {};
@@ -22,8 +20,7 @@ jade::TaskQueue::pop_next_task() -> jade::TaskQueue::Task
   return task;
 }
 
-void
-jade::TaskQueue::perform_all_tasks()
+void jade::TaskQueue::perform_all_tasks()
 {
   while (!task_queue.empty()) {
     Task task = {};
@@ -45,8 +42,7 @@ jade::TaskQueue::perform_all_tasks()
   }
 }
 
-void
-jade::TaskQueue::perform_tasks_until_interrupted()
+void jade::TaskQueue::perform_tasks_until_interrupted()
 {
   do {
     Task task = {};
@@ -72,8 +68,7 @@ jade::TaskQueue::perform_tasks_until_interrupted()
   } while (true);
 }
 
-void
-jade::TaskQueue::interrupt()
+void jade::TaskQueue::interrupt()
 {
   std::lock_guard lock(mutex);
   interrupted = true;

@@ -4,10 +4,10 @@
 #include <jade/render/uniform-buffer.hpp>
 #include <jade/render/vertex-buffer.hpp>
 
+#include <spdlog/spdlog.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <spdlog/spdlog.h>
 
 struct Vertex
 {
@@ -16,9 +16,9 @@ struct Vertex
 
 // Define the triangle vertices
 std::vector<Vertex> vertices = {
-  { { 0.0f, 0.5f, 0.0f } },   // Top
-  { { 0.5f, -0.5f, 0.0f } },  // Right
-  { { -0.5f, -0.5f, 0.0f } }, // Left
+  { { 0.0f, 0.5f, 0.0f } },    // Top
+  { { 0.5f, -0.5f, 0.0f } },   // Right
+  { { -0.5f, -0.5f, 0.0f } },  // Left
 };
 
 static unsigned int indices[] = { 0, 1, 2 };
@@ -30,10 +30,10 @@ struct MatrixBuffer
 
 class TriangleApplicationContext final : public jade::IApplicationContext
 {
-public:
+ public:
   ~TriangleApplicationContext() override = default;
 
-private:
+ private:
   jade::ShaderHandle vsh_handle;
   jade::ShaderHandle fsh_handle;
   jade::ShaderProgramHandle program_handle;
@@ -71,7 +71,7 @@ private:
 
   void on_render(jade::RenderContext* context) override
   {
-    context->clear(0.2f, 0.3f, 0.3f, 1.0f); // Clear to dark gray
+    context->clear(0.2f, 0.3f, 0.3f, 1.0f);  // Clear to dark gray
     context->bind_program(program_handle);
     matrix_buffer->bind(context, jade::ShaderType::VERT);
     vertex_buffer->bind();
@@ -80,8 +80,7 @@ private:
   }
 };
 
-int
-main(const int argc, char* argv[])
+int main(const int argc, char* argv[])
 {
   auto& arg_processor = jade::ArgsProcessor::get_instance();
   arg_processor.process_args(argc, argv);

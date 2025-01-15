@@ -13,12 +13,12 @@ namespace jade {
    *
    * @tparam FunctionType The type of the callable object.
    */
-  template<typename FunctionType>
+  template <typename FunctionType>
   class ScopeExit
   {
-  public:
+   public:
     explicit ScopeExit(FunctionType&& function)
-      : function(std::forward<FunctionType>(function))
+        : function(std::forward<FunctionType>(function))
     {
     }
 
@@ -33,8 +33,8 @@ namespace jade {
     ScopeExit(ScopeExit&&) = delete;
     ScopeExit& operator=(ScopeExit&&) = delete;
 
-  private:
+   private:
     FunctionType function;
   };
 
-} // namespace jade
+}  // namespace jade

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <jade/render/index-buffer.hpp>
 #include <GL/gl3w.h>
+#include <jade/render/index-buffer.hpp>
 
 namespace jade {
 
   class IndexBufferOpenGL final : public IndexBuffer
   {
-  public:
+   public:
     IndexBufferOpenGL();
     ~IndexBufferOpenGL() override;
 
@@ -15,8 +15,8 @@ namespace jade {
     void bind() const override;
     void draw(unsigned int count) const override;
 
-  private:
+   private:
     GLuint ibo = 0;
   };
 
-} 
+}  // namespace jade

@@ -4,10 +4,10 @@
 
 class HelloWorldApplicationContext final : public jade::IApplicationContext
 {
-public:
+ public:
   ~HelloWorldApplicationContext() override = default;
 
-private:
+ private:
   void on_init(jade::RenderContext* context) override
   {
     spdlog::info("Hello World!");
@@ -27,8 +27,7 @@ private:
   }
 };
 
-int
-main()
+int main()
 {
   const auto app = std::make_unique<HelloWorldApplicationContext>();
   return run_app(app.get());
