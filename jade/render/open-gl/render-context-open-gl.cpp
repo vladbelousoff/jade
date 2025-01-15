@@ -25,7 +25,7 @@ namespace jade {
     SDL_GL_SetSwapInterval(1);
 
     const int res = gl3wInit();
-    JADE_ASSERT(res);
+    JADE_ASSERT(!res);
 
     shader_manager = std::make_unique<ShaderManagerOpenGL>();
   }
